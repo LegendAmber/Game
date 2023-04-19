@@ -12,12 +12,18 @@ let Camera = {
 let Player = {
     'PositionX': canvas.width / 2,
     'PositionY': canvas.height / 2,
+    'OriginX': canvas.width / 2,
+    'OriginY': canvas.height / 2,
     'VelocityX': 0,
     'VelocityY': 0,
     'Sprite': new Image()
 }
 Player.Sprite.src = 'Robot.png';
-
+let Start = true;
+let StartPoint = {
+    'X': Player.PositionX - (canvas.width / 2 + 20),
+    'Y': Player.PositionY - (canvas.height / 2 + 20)
+}
 let ctx = canvas.getContext('2d');
 
 main();
@@ -42,11 +48,11 @@ document.addEventListener('keydown', event => {
             break;
         default:
             break;
-}
+    }
 });
 
 document.addEventListener('keyup', event => {
-    switch (event.key){
+    switch (event.key) {
         case 'a':
             Camera.VelocityX = 0;
             Player.VelocityX = 0;
@@ -72,12 +78,12 @@ document.addEventListener('click', () => {
     console.info("Click events will be added in a future update. This is just a placeholder.");
 });
 
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-});
+function main() {
+    if (canvas.width != window.innerWidth || canvas.height != window.innerHeight) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
 
-function main(){
     requestAnimationFrame(main);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -85,4 +91,31 @@ function main(){
     Player.PositionX += Player.VelocityX;
     Player.PositionY += Player.VelocityY;
     ctx.drawImage(Player.Sprite, Player.PositionX, Player.PositionY);
+    ctx.fillStyle = 'black';
+    if (Player.OriginX + 10 <= Player.PositionX) {
+        Generation();
+        Player.OriginX += 10;
+    }
+    else if (Player.OriginX - 10 >= Player.PositionX) {
+        Generation();
+        Player.OriginX -= 10;
+    }
+    else if (Player.OriginY + 10 <= Player.PositionY) {
+        Generation();
+        Player.OriginY += 10;
+    }
+    else if (Player.OriginY - 10 >= Player.PositionY) {
+        Generation();
+        Player.OriginY -= 10;
+    }
+}
+
+function Generation() {
+    const SIZE = 20;
+    for (let i = 0; i < (((canvas.width / 2 + 20) + Player.PositionX) / 20); i++) {
+        if (Start) {
+            ctx.fillRect(StartPoint.X, StartPoint.Y, SIZE, SIZE);
+            Start = false;
+        }
+    }
 }

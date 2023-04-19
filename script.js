@@ -117,5 +117,10 @@ function Generation() {
             ctx.fillRect(StartPoint.X, StartPoint.Y, SIZE, SIZE);
             Start = false;
         }
+        ctx.fillRect(StartPoint.X + 20, StartPoint.Y, SIZE, SIZE);
+        StartPoint.X += 20;
+        console.log('Start Point X', StartPoint.X, 'Start Point Y', StartPoint.Y);
     }
+    StartPoint.Y += 20;
+    return Generation();
 }
